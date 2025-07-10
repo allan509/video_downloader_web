@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Video Downloader</title>
+    <title>Video Downloader</title>
 </head>
 <body>
-  <h2>Paste a Video URL</h2>
-  <form method="POST">
-    <input type="text" name="url" placeholder="Enter video link here" size="50" required>
-    <button type="submit">Download</button>
-  </form>
+    <h2>Download Video</h2>
+    <form method="post">
+        <input type="text" name="url" placeholder="Enter video URL" required style="width: 400px;" />
+        <button type="submit">Download</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="color: red;">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </body>
 </html>
