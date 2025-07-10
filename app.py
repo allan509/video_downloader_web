@@ -3,7 +3,7 @@ import yt_dlp
 import os
 
 app = Flask(__name__)
-app.secret_key = "super_secret_key"  # Required for flash messages
+app.secret_key = "super_secret_key"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -22,9 +22,9 @@ def index():
                 'nocheckcertificate': True,
                 'restrictfilenames': True,
                 'ignoreerrors': True,
-                'source_address': '0.0.0.0',  # avoid IPv6 issues
+                'source_address': '0.0.0.0',
                 'postprocessors': [{
-                    'key': 'FFmpegVideoConvertor',
+                    'key': 'FFmpegVideoConverter',  
                     'preferedformat': 'mp4'
                 }]
             }
@@ -32,15 +32,19 @@ def index():
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
-            # Find the downloaded file
+            # Find and send the downloaded file
             for ext in ["mp4", "mkv", "webm"]:
                 file_name = f"downloaded_video.{ext}"
                 if os.path.exists(file_name):
                     return send_file(file_name, as_attachment=True)
 
-            flash("Video downloaded but file could not be found.")
+            flash("Download completed but file not found.")
         except Exception as e:
             flash(f"Download failed: {str(e)}")
 
         return redirect("/")
     return render_template("index.html")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
